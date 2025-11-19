@@ -1,42 +1,28 @@
 #include <stdio.h>
+#include <string.h>
 
-#define true 1 
-
-typedef enum {
-    NUMBER,
-    OPEN_PAREN,
-    CLOSE_PAREN,
-    PLUS,
-    TIMES,
-    MINUS,
-    DIVIDE
-} TokenType;
-
-typedef struct {
-    TokenType type;
-    float number;
-} Token;
-
-typedef struct {
-    int start;
-    int current;
-} Tokenizer;
-
-Token tokens[2048];
-
-int tokenize(Tokenizer *tokenizer, char *str) {
-    
-}
+#include "tokenizer.h"
 
 int main(int argc, char **argv) {
-    Tokenizer tokenizer;
-
+    // TODO(Ben): prevent buffer overruns in the REPL
     char buffer[128];
 
-    while (true) {
+    while (1) {
+        printf(">> ");
         fgets(buffer, 128, stdin);              
 
-
+        buffer[strlen(buffer) - 1] = '\0'; // removes the trailing newline from input
+        // printf("%s\n", buffer);
         
+        if (!strcmp(buffer, "exit")) break;
+
+        Tokenizer tokenizer;
+        tokenizer.count = 0;
+        tokenizer.capacity = 2048;
+        tokenizer.start = 0;
+        tokenizer.current = 0;
+
+        tokenize(&tokenizer, buffer);
+        for (int i = 0; i < tokenizer.count; i++) print_token(tokenizer.tokens[i]);
     }
 }
